@@ -32,9 +32,10 @@ const ServiceCard = ({ _id, name, price }: ServiceCardProps) => {
         justifyContent: "space-between",
         width: 390,
         height: 60,
+        marginTop: 10,
       }}
       onPress={() => {
-        router.push("/serviceDetail");
+        router.push(`/serviceDetail?id=${_id}`);
       }}
     >
       <View style={{ flex: 1 }}>

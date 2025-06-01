@@ -49,7 +49,27 @@ export default function RootLayout() {
                   width: 50,
                   height: 50,
                   paddingTop: 10,
-                  marginLeft: 40,
+                  marginLeft: 60,
+                }}
+              >
+                <Icon size={30} color={"#D4A73E"} source="dots-vertical" />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="updateService"
+          options={{
+            title: "Update service",
+            headerTintColor: "#D4A73E",
+            headerBackButtonMenuEnabled: false,
+            headerRight: () => (
+              <TouchableOpacity
+                style={{
+                  width: 50,
+                  height: 50,
+                  paddingTop: 10,
+                  marginLeft: 60,
                 }}
               >
                 <Icon size={30} color={"#D4A73E"} source="dots-vertical" />

@@ -36,7 +36,7 @@ const Home: React.FC = () => {
     }
   }, []);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
           backgroundColor: "#D4A73E",
@@ -118,7 +118,7 @@ const Home: React.FC = () => {
       </View>
 
       {/* <ServiceCard /> */}
-      <View>
+      <View style={{ flex: 1, marginBottom: 80 }}>
         <FlatList
           data={services}
           renderItem={({ item }) => (

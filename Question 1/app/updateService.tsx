@@ -9,16 +9,16 @@ import {
   View,
 } from "react-native";
 import Styles from "@/components/Styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconButton } from "react-native-paper";
 import { Label } from "@react-navigation/elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User } from "@/components/interface";
+import { Detail, User } from "@/components/interface";
 import axios from "axios";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
-const AddService = () => {
+const UpdateService = () => {
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
   //validate
@@ -44,8 +44,25 @@ const AddService = () => {
   //     onChangeNumber("");
   //   }
   // };
+  const { id } = useLocalSearchParams<{ id: string }>();
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/services/${id}`);
+        const data: Detail = response.data;
+        setName(data.name);
+        setPrice(data.price.toString());
+      } catch (error) {
+        console.error("Fetch failed", error);
+        Alert.alert("Error", "Failed to load service details");
+      }
+    };
+
+    if (id) fetchService();
+  }, [id]);
+
   const BASE_URL = "https://kami-backend-5rs0.onrender.com";
-  const handleAddService = async () => {
+  const handleUpdateService = async () => {
     try {
       const userData = await AsyncStorage.getItem("user");
       const user: User | null = userData ? JSON.parse(userData) : null;
@@ -55,8 +72,8 @@ const AddService = () => {
         return;
       }
 
-      const response = await axios.post(
-        `${BASE_URL}/services`,
+      const response = await axios.put(
+        `${BASE_URL}/services/${id}`,
         {
           name,
           price: parseFloat(price),
@@ -69,15 +86,15 @@ const AddService = () => {
       );
 
       if (response.status === 200) {
-        console.log("Service added:", response.data);
-        Alert.alert("Success", "Service added");
-        router.push("/(tabs)");
+        console.log("Service updated:", response.data);
+        Alert.alert("Success", "Service updated");
+        router.push("/(tabs)")
       } else {
-        Alert.alert("Add Failed", "Unexpected server response");
+        Alert.alert("Update Failed", "Unexpected server response");
       }
     } catch (error: any) {
-      console.error("Add error:", error?.response?.data || error.message);
-      Alert.alert("Add Failed", "Something went wrong");
+      console.error("Update error:", error?.response?.data || error.message);
+      Alert.alert("Update Failed", "Something went wrong");
     }
   };
 
@@ -105,14 +122,14 @@ const AddService = () => {
         <Text style={styles.errorNumber}>{errorNumber}</Text>
       ) : null} */}
 
-      <TouchableOpacity style={styles.button} onPress={handleAddService}>
-        <Text style={Styles.buttonText as StyleProp<TextStyle>}>Add</Text>
+      <TouchableOpacity style={styles.button} onPress={handleUpdateService}>
+        <Text style={Styles.buttonText as StyleProp<TextStyle>}>Update</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default AddService;
+export default UpdateService;
 
 const styles = StyleSheet.create({
   container: {
